@@ -1,9 +1,9 @@
-if !exists('b:tagfinder_commands')
-  let b:tagfinder_commands = {}
-endif
+command! -nargs=+ DefineTagFinder call s:DefineTagFinder(<f-args>)
+function s:DefineTagFinder(name, kinds)
+  if !exists('b:tagfinder_commands')
+    let b:tagfinder_commands = {}
+  endif
 
-command! -nargs=+ DefineTagCommand call s:DefineTagCommand(<f-args>)
-function s:DefineTagCommand(name, kinds)
   let b:tagfinder_commands[a:name] = split(a:kinds, ',')
 
   exe 'command! -nargs=1 -complete=customlist,CompleteTagFinder '.a:name.' call JumpToTag(<f-args>, "'.a:kinds.'")'
