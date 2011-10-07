@@ -1,3 +1,11 @@
+if exists("g:loaded_tagfinder") || &cp
+  finish
+endif
+
+let g:loaded_tagfinder = '0.0.1' " version number
+let s:keepcpo          = &cpo
+set cpo&vim
+
 if !exists('b:tagfinder_commands')
   let g:tagfinder_commands = {}
 endif
@@ -19,3 +27,6 @@ function s:DefineGlobalTagFinder(name, kinds)
 
   exe 'command! -nargs=1 -complete=customlist,tagfinder#CompleteTagFinder '.a:name.' call tagfinder#JumpToTag(<f-args>, "'.a:kinds.'")'
 endfunction
+
+let &cpo = s:keepcpo
+unlet s:keepcpo
