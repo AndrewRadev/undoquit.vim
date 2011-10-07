@@ -3,7 +3,7 @@ function! tagfinder#CompleteTagFinder(lead, command_line, cursor_pos)
     let b:tagfinder_commands = {}
   endif
 
-  let command_name       = split(a:command_line, '\s\+')[0]
+  let command_name       = s:ExtractCommandName(a:command_line)
   let tagfinder_commands = extend(g:tagfinder_commands, b:tagfinder_commands)
   let kinds              = tagfinder_commands[command_name]
 
@@ -63,4 +63,10 @@ function! tagfinder#JumpToTag(name, kinds)
     call setqflist(qflist)
     copen
   endif
+endfunction
+
+function! s:ExtractCommandName(command_line)
+  let command_line = substitute(a:command_line, '^.*|', '', '')
+  let parts        = split(command_line, '\s\+')
+  return parts[0]
 endfunction
