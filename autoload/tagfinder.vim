@@ -13,7 +13,7 @@ function! tagfinder#CompleteTagFinder(lead, command_line, cursor_pos)
     let tag_prefix = '.'
   endif
 
-  return sort(FindTagNamesByPrefix(tag_prefix, kinds))
+  return sort(tagfinder#FindTagNamesByPrefix(tag_prefix, kinds))
 endfunction
 
 function! tagfinder#FindTagNamesByPrefix(prefix, kinds)
@@ -44,7 +44,7 @@ function! tagfinder#JumpToTag(name, kinds)
   let kinds  = split(a:kinds, ',')
   let qflist = []
 
-  for entry in FindTags(a:name, kinds)
+  for entry in tagfinder#FindTags(a:name, kinds)
     let filename = entry.filename
     let pattern  = substitute(entry.cmd, '^/\(.*\)/$', '\1', 'g')
 

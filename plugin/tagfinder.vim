@@ -10,12 +10,12 @@ function s:DefineTagFinder(name, kinds)
 
   let b:tagfinder_commands[a:name] = split(a:kinds, ',')
 
-  exe 'command! -buffer -nargs=1 -complete=customlist,tagfinder#CompleteTagFinder '.a:name.' call JumpToTag(<f-args>, "'.a:kinds.'")'
+  exe 'command! -buffer -nargs=1 -complete=customlist,tagfinder#CompleteTagFinder '.a:name.' call tagfinder#JumpToTag(<f-args>, "'.a:kinds.'")'
 endfunction
 
 command! -nargs=+ DefineGlobalTagFinder call s:DefineGlobalTagFinder(<f-args>)
 function s:DefineGlobalTagFinder(name, kinds)
   let g:tagfinder_commands[a:name] = split(a:kinds, ',')
 
-  exe 'command! -nargs=1 -complete=customlist,tagfinder#CompleteTagFinder '.a:name.' call JumpToTag(<f-args>, "'.a:kinds.'")'
+  exe 'command! -nargs=1 -complete=customlist,tagfinder#CompleteTagFinder '.a:name.' call tagfinder#JumpToTag(<f-args>, "'.a:kinds.'")'
 endfunction
