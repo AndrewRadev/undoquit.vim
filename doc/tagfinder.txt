@@ -1,0 +1,62 @@
+==============================================================================
+CONTENTS                                      *tagfinder* *tagfinder-contents*
+
+    Installation...........................: |tagfinder-installation|
+    Usage..................................: |tagfinder-usage|
+    Issues.................................: |tagfinder-issues|
+
+
+==============================================================================
+INSTALLATION                                          *tagfinder-installation*
+
+There are several ways to install the plugin. The recommended one is by using
+Tim Pope's pathogen (http://www.vim.org/scripts/script.php?script_id=2332). In
+that case, you can clone the plugin's git repository like so:
+>
+    git clone git://github.com/AndrewRadev/tagfinder.vim.git ~/.vim/bundle/tagfinder
+<
+If your vim configuration is under git version control, you could also set up
+the repository as a submodule, which would allow you to update more easily.
+The command is (provided you're in ~/.vim):
+>
+    git submodule add git://github.com/AndrewRadev/tagfinder.vim.git bundle/tagfinder
+<
+Another way is to simply copy all the essential directories inside the ~.vim/
+directory: autoload, plugin, autoload, doc.
+
+After the plugin is installed, you can use |DefineGlobalTagFinder| to define
+global tag-searching commands, or |DefineTagFinder| to define buffer-local
+ones. See |tagfinder-usage| section for more details.
+
+Note that the plugin does not add any tagfinders by default. It simply
+provides the command to create them in a simple way.
+
+
+==============================================================================
+USAGE                                                        *tagfinder-usage*
+
+The plugin's purpose is to simplify searching for tags by their kind. Pressing
+<C-]> on a word is easy enough, but occasionally, it's necessary to look for
+tags that are not in the immediate vicinity. In such cases, a specific
+language token is often needed -- a class, function, module.
+
+The plugin defines a command, |DefineGlobalTagFinder| that lets you create a
+command that does just that. The syntax is:
+>
+    DefineGlobalTagFinder FindFunction f,function
+<
+This will define the command "FindFunction", which will look for tags with the
+kind "f" or the kind "function". The name can be anything you like. The
+command will have tab-completion, which means you can type in the first few
+characters of the token you're looking for and let vim suggest the rest.
+
+TODO buffer-local commands
+TODO detailed command descriptions
+
+==============================================================================
+ISSUES                                                      *tagfinder-issues*
+
+Any issues and suggestions are very welcome on the github bugtracker:
+https://github.com/AndrewRadev/tagfinder.vim/issues
+
+vim:tw=78:sw=4:ft=help:norl:
