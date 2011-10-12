@@ -31,7 +31,7 @@ endfunction
 function! tagfinder#FindTags(name, kinds)
   let tag_list = []
 
-  for entry in taglist(a:name)
+  for entry in taglist('^'.a:name.'$')
     if index(a:kinds, entry.kind) > -1
       call add(tag_list, entry)
     endif
