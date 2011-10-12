@@ -3,6 +3,7 @@ CONTENTS                                      *tagfinder* *tagfinder-contents*
 
     Installation...........................: |tagfinder-installation|
     Usage..................................: |tagfinder-usage|
+    Commands...............................: |tagfinder-commands|
     Issues.................................: |tagfinder-issues|
 
 
@@ -24,9 +25,9 @@ The command is (provided you're in ~/.vim):
 Another way is to simply copy all the essential directories inside the ~.vim/
 directory: autoload, plugin, autoload, doc.
 
-After the plugin is installed, you can use |DefineGlobalTagFinder| to define
-global tag-searching commands, or |DefineTagFinder| to define buffer-local
-ones. See |tagfinder-usage| section for more details.
+After the plugin is installed, you can use |:DefineTagFinder| to define global
+tag-searching commands, or |:DefineLocalTagFinder| to define buffer-local ones.
+See |tagfinder-usage| section for more details.
 
 Note that the plugin does not add any tagfinders by default. It simply
 provides the command to create them in a simple way.
@@ -35,23 +36,80 @@ provides the command to create them in a simple way.
 ==============================================================================
 USAGE                                                        *tagfinder-usage*
 
-The plugin's purpose is to simplify searching for tags by their kind. Pressing
-<C-]> on a word is easy enough, but occasionally, it's necessary to look for
-tags that are not in the immediate vicinity. In such cases, a specific
-language token is often needed -- a class, function, module.
+The plugin's purpose is to simplify searching for tags by their kind. The most
+common way of using tags is by pressing <C-]> on them, but it's often needed
+to look for identifiers that are not close to the cursor. The built-in |:tag|
+command could do the trick, although it would be useful to be able to limit
+its results to only specific language tokens -- classes, modules, functions.
 
-The plugin defines a command, |DefineGlobalTagFinder| that lets you create a
-command that does just that. The syntax is:
+The plugin defines a command, |:DefineTagFinder| that lets you create a command
+that does just that. The syntax is:
 >
-    DefineGlobalTagFinder FindFunction f,function
+    " in after/plugin/tagfinders.vim, for example
+    DefineTagFinder FindFunction f,function
+
+    " or, in .vimrc:
+    runtime plugin/tagfinder.vim
+    DefineTagFinder FindFunction f,function
 <
 This will define the command "FindFunction", which will look for tags with the
 kind "f" or the kind "function". The name can be anything you like. The
 command will have tab-completion, which means you can type in the first few
 characters of the token you're looking for and let vim suggest the rest.
 
-TODO buffer-local commands
-TODO detailed command descriptions
+It's important to note that this needs to placed in a file within
+"after/plugin". It would also be possible to put it in ".vimrc", as long as
+"runtime plugin/tagfinder.vim" is executed before that (it will not be loaded
+twice). This is necessary, because plugins are loaded after ".vimrc" is
+sourced, so the plugin's commands would not be defined at that time.
+
+Since different languages could use different ctags kinds, you might want to
+define buffer-local commands to override the global ones. For that use case,
+the plugin provides the |:DefineLocalTagFinder| command with the exact same
+syntax:
+>
+    " in ftplugin/java.vim:
+    DefineLocalTagFinder FindFunction m,method
+
+    " or, alternatively, with an autocommand in .vimrc:
+    autocmd FileType java DefineLocalTagFinder FindFunction m,method
+<
+
+==============================================================================
+COMMANDS                                                   *tagfinder-commands*
+
+                                              *:DefineTagFinder*
+:DefineTagFinder {name} {kinds}
+                    Defines a "tagfinder" command with the name {name}. The
+                    new command accepts a single parameter, which should be a
+                    tag.
+
+                    In the case of a unique tag, the user is sent to its
+                    definition. Otherwise, the quickfix window is opened with
+                    all matches. The command is auto-completed with the
+                    appropriate tags.
+
+                    The tags that are retrieved and the ones that are used for
+                    completion are both filtered by the {kinds} parameter,
+                    which should be a comma-separated list of ctags kinds.
+
+
+                                              *:DefineLocalTagFinder*
+:DefineLocalTagFinder {name} {kinds}
+                    Defines a "tagfinder" command with the name {name}, which
+                    is only active in the current buffer. This could be done
+                    in a filetype plugin or in an autocommand. The new command
+                    accepts a single parameter, which should be a tag.
+
+                    In the case of a unique tag, the user is sent to its
+                    definition. Otherwise, the quickfix window is opened with
+                    all matches. The command is auto-completed with the
+                    appropriate tags.
+
+                    The tags that are retrieved and the ones that are used for
+                    completion are both filtered by the {kinds} parameter,
+                    which should be a comma-separated list of ctags kinds.
+
 
 ==============================================================================
 ISSUES                                                      *tagfinder-issues*
