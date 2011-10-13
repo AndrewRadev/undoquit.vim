@@ -23,7 +23,7 @@ The command is (provided you're in ~/.vim):
     git submodule add git://github.com/AndrewRadev/tagfinder.vim.git bundle/tagfinder
 <
 Another way is to simply copy all the essential directories inside the ~.vim/
-directory: autoload, plugin, autoload, doc.
+directory: autoload, doc, plugin.
 
 After the plugin is installed, you can use |:DefineTagFinder| to define global
 tag-searching commands, or |:DefineLocalTagFinder| to define buffer-local ones.
@@ -39,8 +39,9 @@ USAGE                                                        *tagfinder-usage*
 The plugin's purpose is to simplify searching for tags by their kind. The most
 common way of using tags is by pressing <C-]> on them, but it's often needed
 to look for identifiers that are not close to the cursor. The built-in |:tag|
-command could do the trick, although it would be useful to be able to limit
-its results to only specific language tokens -- classes, modules, functions.
+command could do the trick, but it would be somewhat useful to be able to
+limit its results to only specific language tokens -- classes, modules,
+functions.
 
 The plugin defines a command, |:DefineTagFinder| that lets you create a command
 that does just that. The syntax is:
@@ -53,9 +54,10 @@ that does just that. The syntax is:
     DefineTagFinder FindFunction f,function
 <
 This will define the command "FindFunction", which will look for tags with the
-kind "f" or the kind "function". The name can be anything you like. The
-command will have tab-completion, which means you can type in the first few
-characters of the token you're looking for and let vim suggest the rest.
+kind "f" or the kind "function". The name can be anything you like. The kinds
+list needs to be space-escaped. The command will have tab-completion, which
+means you can type in the first few characters of the token you're looking for
+and let vim suggest the rest.
 
 It's important to note that this needs to placed in a file within
 "after/plugin". It would also be possible to put it in ".vimrc", as long as

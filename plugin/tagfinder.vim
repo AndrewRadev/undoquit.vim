@@ -1,4 +1,4 @@
-if exists("g:loaded_tagfinder") || &cp
+if exists('g:loaded_tagfinder') || &cp
   finish
 endif
 
