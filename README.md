@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/AndrewRadev/undoquit.vim.png?branch=master)](http://travis-ci.org/AndrewRadev/undoquit.vim)
+
 This plugin attempts to solve the issue of quitting a window, and then realizing you actually need it moments later. It simply lets you "undo" the quit, similar to the way you would restore a just-closed tab in your browser.
 
 ## Usage
