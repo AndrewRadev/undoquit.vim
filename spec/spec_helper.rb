@@ -1,27 +1,15 @@
 require 'vimrunner'
-require 'vimrunner/testing'
-require_relative './support/vim'
-require_relative './support/files'
+require 'vimrunner/rspec'
 
-RSpec.configure do |config|
-  config.include Vimrunner::Testing
-  config.include Support::Files
+plugin_path = File.expand_path('.')
 
-  config.before(:suite) do
-    VIM = Vimrunner.start_gvim
-    VIM.add_plugin(File.expand_path('.'), 'plugin/undoquit.vim')
-  end
+Vimrunner::RSpec.configure do |config|
+  config.reuse_server = true
 
-  config.after(:suite) do
-    VIM.kill
-  end
+  config.start_vim do
+    vim = Vimrunner.start_gvim
 
-  # cd into a temporary directory for every example.
-  config.around do |example|
-    @vim = VIM
-
-    tmpdir(@vim) do
-      example.call
-    end
+    vim.add_plugin(plugin_path, 'plugin/undoquit.vim')
+    vim
   end
 end

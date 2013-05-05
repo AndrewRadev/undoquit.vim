@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe "Undoquit" do
-  let(:vim) { @vim }
-
   # TODO (2013-01-14) Slow!
   def tab_pages
     last_tab_page = vim.command("echo tabpagenr('$')").to_i
