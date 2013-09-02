@@ -1,3 +1,5 @@
+*undoquit.txt*	Undo a :quit command, restoring the closed window
+
 ==============================================================================
 CONTENTS                                        *undoquit*   *undoquit-contents*
 
