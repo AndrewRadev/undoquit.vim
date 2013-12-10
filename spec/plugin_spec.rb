@@ -7,7 +7,7 @@ describe "Undoquit" do
 
     (1 .. last_tab_page).map do |tabnr|
       winnr = vim.command("echo tabpagewinnr(#{tabnr})")
-      vim.normal("#{tabnr}gt")
+      vim.command("tabnext #{tabnr}")
       vim.command("#{winnr}wincmd w")
       vim.command("echo bufname('%')")
     end
