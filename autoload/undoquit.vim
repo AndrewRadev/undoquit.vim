@@ -34,7 +34,10 @@ endfunction
 " Fetches the data we need to successfully restore a window we're just about
 " to :quit.
 function! undoquit#GetWindowRestoreData()
-  let window_data = { 'filename': expand('%') }
+  let window_data = {
+        \ 'filename':  expand('%'),
+        \ 'tabpagenr': tabpagenr()
+        \ }
 
   if len(tabpagebuflist()) == 1
     " then this is the last buffer in this tab
@@ -60,7 +63,7 @@ endfunction
 "
 " Returns true if it found an appropriate window in that direction, false if
 " it didn't.
-function! s:UseNeighbourWindow(direction, restore_command, window_data)
+function! s:UseNeighbourWindow(direction, split_command, window_data)
   let current_bufnr = bufnr('%')
   let current_winnr = winnr()
 
@@ -70,7 +73,10 @@ function! s:UseNeighbourWindow(direction, restore_command, window_data)
     if buflisted(bufnr) && bufnr != current_bufnr
       " then we have a neighbouring buffer above
       let a:window_data.neighbour_buffer = expand('%')
-      let a:window_data.open_command     = a:restore_command
+      let a:window_data.open_command = join([
+            \ 'tabnext '.a:window_data.tabpagenr,
+            \ a:split_command,
+            \ ], ' | ')
       return 1
     else
       return 0

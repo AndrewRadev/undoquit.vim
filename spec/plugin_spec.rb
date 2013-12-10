@@ -55,6 +55,22 @@ describe "Undoquit" do
       vim.command 'Undoquit'
       tab_pages.should eq ['one.txt', 'two.txt', 'three.txt']
     end
+
+    specify "split in tab" do
+      # open and close split in first tab
+      vim.command :tabfirst
+      vim.command 'rightbelow split four.txt'
+      vim.command :quit
+
+      # move away from first tab
+      vim.command :tablast
+
+      # restore split in tabpage 1
+      vim.command 'Undoquit'
+
+      vim.command :tabfirst
+      windows.should eq ['one.txt', 'four.txt']
+    end
   end
 
   describe "splits" do
