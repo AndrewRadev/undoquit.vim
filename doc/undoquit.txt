@@ -31,6 +31,8 @@ directory: autoload, doc, plugin.
 ==============================================================================
 USAGE                                                          *undoquit-usage*
 
+This plugin requires Vim at version 7.4 or above.
+
 Whenever you execute a :quit on a window, that window's position is stored in
 a stack. Pressing <c-w>u (or executing the :Undoquit command) is going to
 "undo" that quit, restoring the window to its original position.
