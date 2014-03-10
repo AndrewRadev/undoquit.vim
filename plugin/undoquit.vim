@@ -2,6 +2,11 @@ if exists('g:loaded_undoquit') || &cp
   finish
 endif
 
+" The plugin requires Vim 7.4
+if v:version < 704
+  finish
+endif
+
 let g:loaded_undoquit = '0.0.1' " version number
 let s:keepcpo = &cpo
 set cpo&vim

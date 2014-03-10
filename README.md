@@ -2,6 +2,10 @@
 
 This plugin attempts to solve the issue of quitting a window, and then realizing you actually need it moments later. It simply lets you "undo" the quit, similar to the way you would restore a just-closed tab in your browser.
 
+## Requirements
+
+Requires Vim at version 7.4 or above.
+
 ## Usage
 
 Whenever you execute a `:quit` on a window, that window's position is stored in a stack. Pressing `<c-w>u` (or executing the `:Undoquit` command) is going to "undo" that quit, restoring the window to its original position.
