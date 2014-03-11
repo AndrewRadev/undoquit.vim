@@ -1,7 +1,10 @@
 language: ruby
 rvm:
   - 1.9.3
-before_install: sudo apt-get install vim-gtk
+before_install:
+  - "sudo add-apt-repository ppa:fcwu-tw/ppa"
+  - "sudo apt-get update"
+  - "sudo apt-get install vim-gtk"
 before_script:
   - "vim --version"
   - "export DISPLAY=:99.0"
