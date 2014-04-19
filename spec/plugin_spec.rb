@@ -31,6 +31,22 @@ describe "Undoquit" do
     vim.command :only
   end
 
+  it "restores a window in the same tab if only special buffers are present" do
+    vim.edit 'one.txt'
+    vim.command 'tabnew two.txt'
+    vim.command 'copen'
+    vim.command 'wincmd k'
+
+    # require 'pry'; binding.pry
+
+    vim.command 'quit' # quit window
+    vim.command 'quit' # quit quickfix window
+    vim.command 'Undoquit'
+
+    tab_pages.should eq ['one.txt', 'two.txt']
+    windows.should eq ['two.txt']
+  end
+
   describe "tabs" do
     before :each do
       vim.edit 'one.txt'

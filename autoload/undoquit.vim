@@ -22,6 +22,13 @@ function! undoquit#UndoQuitWindow()
   endif
 
   let window_data = remove(g:undoquit_stack, -1)
+  let real_buffers = s:RealTabBuffers()
+
+  if len(real_buffers) == 0
+    " then there's nothing of importance in this tab, let's just clear it and
+    " use "edit"
+    let window_data.open_command = 'only | edit'
+  endif
 
   if window_data.neighbour_buffer != '' && bufnr(window_data.neighbour_buffer) >= 0
     let neighbour_window = bufwinnr(bufnr(window_data.neighbour_buffer))
@@ -39,7 +46,9 @@ function! undoquit#GetWindowRestoreData()
         \ 'tabpagenr': tabpagenr()
         \ }
 
-  if len(tabpagebuflist()) == 1
+  let real_buffers = s:RealTabBuffers()
+
+  if len(real_buffers) == 1
     " then this is the last buffer in this tab
     let window_data.neighbour_buffer = ''
     let window_data.open_command     = (tabpagenr() - 1).'tabnew'
@@ -84,4 +93,8 @@ function! s:UseNeighbourWindow(direction, split_command, window_data)
   finally
     exe current_winnr.'wincmd w'
   endtry
+endfunction
+
+function! s:RealTabBuffers()
+  return filter(copy(tabpagebuflist()), 'buflisted(v:val) && getbufvar(v:val, "&buftype") == ""')
 endfunction
