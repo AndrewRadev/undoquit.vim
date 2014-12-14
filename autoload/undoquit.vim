@@ -35,7 +35,7 @@ function! undoquit#UndoQuitWindow()
     exe neighbour_window.'wincmd w'
   endif
 
-  exe window_data.open_command.' '.window_data.filename
+  exe window_data.open_command.' '.escape(window_data.filename, ' ')
 endfunction
 
 " Fetches the data we need to successfully restore a window we're just about
