@@ -30,7 +30,9 @@ function! undoquit#UndoQuitWindow()
     let window_data.open_command = 'only | edit'
   endif
 
-  if window_data.neighbour_buffer != '' && bufnr(window_data.neighbour_buffer) >= 0
+  if window_data.neighbour_buffer != '' &&
+        \ bufnr(window_data.neighbour_buffer) >= 0 &&
+        \ bufwinnr(bufnr(window_data.neighbour_buffer)) >= 0
     let neighbour_window = bufwinnr(bufnr(window_data.neighbour_buffer))
     exe neighbour_window.'wincmd w'
   endif
