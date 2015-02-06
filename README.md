@@ -24,6 +24,12 @@ Set the variable to an empty string to avoid setting a mapping at all.
 
 Internally, the plugin listens for the `QuitPre` event and does some window-hopping to establish the position of the current window. If you notice any odd behaviour when closing windows, like the wrong window gets closed or something, it may be a bug in this plugin. Please disable it and try again, and if the plugin is faulty, please open an issue on the [github bugtracker](https://github.com/AndrewRadev/undoquit.vim/issues)
 
+A known problem is that the plugin doesn't work for `<c-w>c`, since that mapping doesn't seem to throw a `QuitPre` autocommand. If you use it, you could make it work by calling the undoquit "save history" function manually:
+
+``` vim
+nnoremap <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
+```
+
 ## Contributing
 
 Pull requests are welcome, but take a look at [CONTRIBUTING.md](https://github.com/AndrewRadev/undoquit.vim/blob/master/CONTRIBUTING.md) first for some guidelines.

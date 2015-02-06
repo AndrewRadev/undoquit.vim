@@ -33,9 +33,9 @@ USAGE                                                          *undoquit-usage*
 
 This plugin requires Vim at version 7.4 or above.
 
-Whenever you execute a :quit on a window, that window's position is stored in
-a stack. Pressing <c-w>u (or executing the :Undoquit command) is going to
-"undo" that quit, restoring the window to its original position.
+Whenever you execute a `:quit` or `ZZ` on a window, that window's position is
+stored in a stack. Pressing <c-w>u (or executing the :Undoquit command) is
+going to "undo" that quit, restoring the window to its original position.
 
 Note that this only works on buffers that are "listed", so it won't restore
 the quickfix window or the NERDTree, but it's assumed that you don't really
@@ -48,6 +48,8 @@ Example:
 <
 Set the variable to an empty string to avoid setting a mapping at all.
 
+Known Issues ~
+
 
 ==============================================================================
 ISSUES                                                        *undoquit-issues*
@@ -59,5 +61,11 @@ something, it may be a bug in this plugin. Please disable it and try again,
 and if the plugin is faulty, please open an issue on the github bugtracker:
 https://github.com/AndrewRadev/undoquit.vim/issues
 
+A known problem is that the plugin doesn't work for <c-w>c, since that mapping
+doesn't seem to throw a |QuitPre| autocommand. If you use it, you could make
+it work by calling the undoquit "save history" function manually:
+>
+    nnoremap <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
+<
 
 vim:tw=78:sw=4:ft=help:norl:
