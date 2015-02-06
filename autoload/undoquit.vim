@@ -38,6 +38,10 @@ function! undoquit#UndoQuitWindow()
   endif
 
   exe window_data.open_command.' '.escape(window_data.filename, ' ')
+
+  if has_key(window_data, 'view')
+    call winrestview(window_data.view)
+  endif
 endfunction
 
 " Fetches the data we need to successfully restore a window we're just about
@@ -45,7 +49,8 @@ endfunction
 function! undoquit#GetWindowRestoreData()
   let window_data = {
         \ 'filename':  expand('%'),
-        \ 'tabpagenr': tabpagenr()
+        \ 'tabpagenr': tabpagenr(),
+        \ 'view':      winsaveview(),
         \ }
 
   let real_buffers = s:RealTabBuffers()
