@@ -37,7 +37,7 @@ function! undoquit#UndoQuitWindow()
     exe neighbour_window.'wincmd w'
   endif
 
-  exe window_data.open_command.' '.escape(window_data.filename, ' ')
+  exe window_data.open_command.' '.escape(fnamemodify(window_data.filename, ':~:.'), ' ')
 
   if has_key(window_data, 'view')
     call winrestview(window_data.view)
@@ -48,7 +48,7 @@ endfunction
 " to :quit.
 function! undoquit#GetWindowRestoreData()
   let window_data = {
-        \ 'filename':  expand('%'),
+        \ 'filename':  expand('%:p'),
         \ 'tabpagenr': tabpagenr(),
         \ 'view':      winsaveview(),
         \ }
