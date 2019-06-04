@@ -2,6 +2,8 @@
 
 This plugin attempts to solve the issue of quitting a window, and then realizing you actually need it moments later. It simply lets you "undo" the quit, similar to the way you would restore a just-closed tab in your browser.
 
+For a visual demo, there's a screencast [on youtube](https://youtu.be/FnARbgfuEZA)
+
 ## Requirements
 
 Requires Vim at version 7.4 or above.
