@@ -1,7 +1,7 @@
 " Stores the current window in the quit history, so we can undo the :quit
 " later.
 function! undoquit#SaveWindowQuitHistory()
-  if !buflisted(expand('%'))
+  if !s:IsStorable(bufnr('%'))
     return
   endif
 
@@ -86,7 +86,7 @@ function! s:UseNeighbourWindow(direction, split_command, window_data)
   try
     exe 'wincmd '.a:direction
     let bufnr = bufnr('%')
-    if buflisted(bufnr) && bufnr != current_bufnr
+    if s:IsStorable(bufnr) && bufnr != current_bufnr
       " then we have a neighbouring buffer above
       let a:window_data.neighbour_buffer = expand('%')
       let a:window_data.open_command = join([
@@ -103,5 +103,13 @@ function! s:UseNeighbourWindow(direction, split_command, window_data)
 endfunction
 
 function! s:RealTabBuffers()
-  return filter(copy(tabpagebuflist()), 'buflisted(v:val) && getbufvar(v:val, "&buftype") == ""')
+  return filter(copy(tabpagebuflist()), 's:IsStorable(v:val)')
+endfunction
+
+function! s:IsStorable(bufnr)
+  if buflisted(a:bufnr) && getbufvar(a:bufnr, '&buftype') == ''
+    return 1
+  else
+    return getbufvar(a:bufnr, '&buftype') == 'help'
+  endif
 endfunction

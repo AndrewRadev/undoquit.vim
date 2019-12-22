@@ -37,14 +37,23 @@ describe "Undoquit" do
     vim.command 'copen'
     vim.command 'wincmd k'
 
-    # require 'pry'; binding.pry
-
     vim.command 'quit' # quit window
     vim.command 'quit' # quit quickfix window
     vim.command 'Undoquit'
 
     tab_pages.should eq ['one.txt', 'two.txt']
     windows.should eq ['two.txt']
+  end
+
+  it "restores a help window" do
+    vim.edit 'one.txt'
+    vim.command 'help'
+
+    vim.command 'quit' # quit help window
+    vim.command 'Undoquit' # restore help window
+
+    tab_pages[0].should =~ /\/help\.txt$/
+    windows[0].should =~ /\/help\.txt$/
   end
 
   describe "tabs" do
