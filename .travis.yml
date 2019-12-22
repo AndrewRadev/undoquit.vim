@@ -11,6 +11,7 @@ addons:
 env:
   - TRAVIS_CI=1
 before_script:
+  - "gem install bundler:1.17.2"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - "vim --version"
