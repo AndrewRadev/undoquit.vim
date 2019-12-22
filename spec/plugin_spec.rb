@@ -41,8 +41,8 @@ describe "Undoquit" do
     vim.command 'quit' # quit quickfix window
     vim.command 'Undoquit'
 
-    tab_pages.should eq ['one.txt', 'two.txt']
-    windows.should eq ['two.txt']
+    expect(tab_pages).to eq ['one.txt', 'two.txt']
+    expect(windows).to eq ['two.txt']
   end
 
   it "restores a help window" do
@@ -52,8 +52,8 @@ describe "Undoquit" do
     vim.command 'quit' # quit help window
     vim.command 'Undoquit' # restore help window
 
-    tab_pages[0].should =~ /\/help\.txt$/
-    windows[0].should =~ /\/help\.txt$/
+    expect(tab_pages[0]).to match /\/help\.txt$/
+    expect(windows[0]).to match /\/help\.txt$/
   end
 
   describe "tabs" do
@@ -70,15 +70,15 @@ describe "Undoquit" do
       vim.command :quit
 
       # initial state after quitting
-      tab_pages.should eq ['two.txt']
+      expect(tab_pages).to eq ['two.txt']
 
       # restore tabpage 1
       vim.command 'Undoquit'
-      tab_pages.should eq ['one.txt', 'two.txt']
+      expect(tab_pages).to eq ['one.txt', 'two.txt']
 
       # restore tabpage 3
       vim.command 'Undoquit'
-      tab_pages.should eq ['one.txt', 'two.txt', 'three.txt']
+      expect(tab_pages).to eq ['one.txt', 'two.txt', 'three.txt']
     end
 
     specify "split in tab" do
@@ -94,7 +94,7 @@ describe "Undoquit" do
       vim.command 'Undoquit'
 
       vim.command :tabfirst
-      windows.should eq ['one.txt', 'four.txt']
+      expect(windows).to eq ['one.txt', 'four.txt']
     end
   end
 
@@ -113,15 +113,15 @@ describe "Undoquit" do
       vim.command :quit
 
       # initial state after quitting
-      windows.should eq ['two.txt']
+      expect(windows).to eq ['two.txt']
 
       # restore window 1
       vim.command 'Undoquit'
-      windows.should eq ['one.txt', 'two.txt']
+      expect(windows).to eq ['one.txt', 'two.txt']
 
       # restore window 3
       vim.command 'Undoquit'
-      windows.should eq ['one.txt', 'two.txt', 'three.txt']
+      expect(windows).to eq ['one.txt', 'two.txt', 'three.txt']
     end
 
     specify "quit and undo top window" do
@@ -130,11 +130,11 @@ describe "Undoquit" do
       vim.command :quit
 
       # initial state after quitting
-      windows.should eq ['two.txt', 'three.txt']
+      expect(windows).to eq ['two.txt', 'three.txt']
 
       # restore window 1
       vim.command 'Undoquit'
-      windows.should eq ['one.txt', 'two.txt', 'three.txt']
+      expect(windows).to eq ['one.txt', 'two.txt', 'three.txt']
     end
   end
 end
