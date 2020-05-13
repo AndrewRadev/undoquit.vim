@@ -15,11 +15,24 @@ if !exists('g:undoquit_mapping')
   let g:undoquit_mapping = '<c-w>u'
 endif
 
+if !exists('g:undoquit_tab_mapping')
+  let g:undoquit_tab_mapping = '<c-w>U'
+endif
+
 autocmd QuitPre * call undoquit#SaveWindowQuitHistory()
-command Undoquit :call undoquit#UndoQuitWindow()
+
+command Undoquit    call undoquit#RestoreWindow()
+command UndoquitTab call undoquit#RestoreTab()
+
+command -addr=tabs -range -nargs=? UndoableTabclose
+      \ call undoquit#Tabclose(<count>, <q-args>)
 
 if g:undoquit_mapping != ''
-  exe 'nnoremap '.g:undoquit_mapping.' :call undoquit#UndoQuitWindow()<cr>'
+  exe 'nnoremap <silent> '.g:undoquit_mapping.' :call undoquit#RestoreWindow()<cr>'
+endif
+
+if g:undoquit_tab_mapping != ''
+  exe 'nnoremap <silent> '.g:undoquit_tab_mapping.' :call undoquit#RestoreTab()<cr>'
 endif
 
 let &cpo = s:keepcpo

@@ -14,8 +14,30 @@ function! undoquit#SaveWindowQuitHistory()
   call add(g:undoquit_stack, window_data)
 endfunction
 
+function! undoquit#Tabclose(prefix_count, suffix_count)
+  if a:suffix_count != ''
+    let tab_description = a:suffix_count
+  elseif a:prefix_count > 0
+    let tab_description = a:prefix_count
+  else
+    let tab_description = ''
+  endif
+
+  if tab_description != ''
+    exe 'tabnext ' . tab_description
+  endif
+
+  for bufnr in tabpagebuflist()
+    if bufexists(bufnr)
+      let winnr = bufwinnr(bufnr)
+      exe winnr.'wincmd w'
+      quit
+    endif
+  endfor
+endfunction
+
 " Restores the last-:quit window.
-function! undoquit#UndoQuitWindow()
+function! undoquit#RestoreWindow()
   if !exists('g:undoquit_stack') || empty(g:undoquit_stack)
     echo "No closed windows to undo"
     return
@@ -42,6 +64,31 @@ function! undoquit#UndoQuitWindow()
   if has_key(window_data, 'view')
     call winrestview(window_data.view)
   endif
+endfunction
+
+function! undoquit#RestoreTab()
+  if !exists('g:undoquit_stack') || empty(g:undoquit_stack)
+    echo "No closed tabs to undo"
+    return
+  endif
+
+  let last_window = g:undoquit_stack[len(g:undoquit_stack) - 1]
+  let last_tab    = last_window.tabpagenr
+
+  while last_window.tabpagenr == last_tab
+    call undoquit#RestoreWindow()
+
+    if len(g:undoquit_stack) > 0
+      let last_window = g:undoquit_stack[len(g:undoquit_stack) - 1]
+    else
+      break
+    endif
+
+    if last_window.open_command == '1tabnew'
+      " then this was the window that opens a new tab page, stop here
+      break
+    endif
+  endwhile
 endfunction
 
 " Fetches the data we need to successfully restore a window we're just about
