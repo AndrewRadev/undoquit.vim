@@ -73,4 +73,45 @@ describe "Undoquit" do
     vim.command '3tabnext'
     expect(windows).to eq ['five.txt']
   end
+
+  describe ":UndoableTabclose" do
+    before :each do
+      vim.edit 'one.txt'
+      vim.command 'tabnew two.txt'
+      vim.command 'tabnew three.txt'
+      vim.command 'tabnew four.txt'
+      vim.command 'tabnew five.txt'
+    end
+
+    specify "closes tab pages specified by a prefix" do
+      expect(tab_pages).to eq ['one.txt', 'two.txt', 'three.txt', 'four.txt', 'five.txt']
+
+      vim.command '1tabnext'
+      vim.command 'UndoableTabclose'
+      expect(tab_pages).to eq ['two.txt', 'three.txt', 'four.txt', 'five.txt']
+
+      vim.command '3UndoableTabclose'
+      expect(tab_pages).to eq ['two.txt', 'three.txt', 'five.txt']
+
+      vim.command '1tabnext'
+      vim.command '+UndoableTabclose'
+      expect(tab_pages).to eq ['two.txt', 'five.txt']
+
+      vim.command '1tabnext'
+      vim.command '$UndoableTabclose'
+      expect(tab_pages).to eq ['two.txt']
+    end
+
+    specify "closes tab pages specified by a suffix" do
+      expect(tab_pages).to eq ['one.txt', 'two.txt', 'three.txt', 'four.txt', 'five.txt']
+
+      vim.command '1tabnext'
+      vim.command 'UndoableTabclose $'
+      expect(tab_pages).to eq ['one.txt', 'two.txt', 'three.txt', 'four.txt']
+
+      vim.command '$tabnext'
+      vim.command 'UndoableTabclose -2'
+      expect(tab_pages).to eq ['one.txt', 'three.txt', 'four.txt']
+    end
+  end
 end
