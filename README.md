@@ -42,12 +42,14 @@ nnoremap <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
 Use the `g:undoquit_mapping` variable to set the mapping for the window restore action. Example:
 
 ``` vim
+" default: <c-w>u
 let g:undoquit_mapping = '_u'
 ```
 
 Use `g:undoquit_tab_mapping` for the keybinding that restores a full tab of windows:
 
 ``` vim
+" default: <c-w>U
 let g:undoquit_tab_mapping = '_U'
 ```
 
