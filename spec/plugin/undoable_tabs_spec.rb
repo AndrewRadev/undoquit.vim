@@ -84,6 +84,8 @@ describe "Undoquit" do
     end
 
     specify "closes tab pages specified by a prefix" do
+      pending "Broken on TravisCI due to old Vim version" if ENV['TRAVIS_CI']
+
       expect(tab_pages).to eq ['one.txt', 'two.txt', 'three.txt', 'four.txt', 'five.txt']
 
       vim.command '1tabnext'
@@ -103,6 +105,8 @@ describe "Undoquit" do
     end
 
     specify "closes tab pages specified by a suffix" do
+      pending "Broken on TravisCI due to old Vim version" if ENV['TRAVIS_CI']
+
       expect(tab_pages).to eq ['one.txt', 'two.txt', 'three.txt', 'four.txt', 'five.txt']
 
       vim.command '1tabnext'
