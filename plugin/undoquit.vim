@@ -24,8 +24,13 @@ autocmd QuitPre * call undoquit#SaveWindowQuitHistory()
 command Undoquit    call undoquit#RestoreWindow()
 command UndoquitTab call undoquit#RestoreTab()
 
-command -addr=tabs -range -nargs=? -bang UndoableTabclose
-      \ call undoquit#Tabclose(<count>, <q-args>, '<bang>')
+if has('patch-7.4.542')
+  command -addr=tabs -range -nargs=? -bang UndoableTabclose
+        \ call undoquit#Tabclose(<count>, <q-args>, '<bang>')
+else
+  command -count -nargs=? -bang UndoableTabclose
+        \ call undoquit#Tabclose(<count>, <q-args>, '<bang>')
+endif
 
 if g:undoquit_mapping != ''
   exe 'nnoremap <silent> '.g:undoquit_mapping.' :call undoquit#RestoreWindow()<cr>'
