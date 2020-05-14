@@ -14,7 +14,7 @@ function! undoquit#SaveWindowQuitHistory()
   call add(g:undoquit_stack, window_data)
 endfunction
 
-function! undoquit#Tabclose(prefix_count, suffix_count)
+function! undoquit#Tabclose(prefix_count, suffix_count, bang)
   if a:suffix_count != ''
     let tab_description = a:suffix_count
   elseif a:prefix_count > 0
@@ -31,7 +31,7 @@ function! undoquit#Tabclose(prefix_count, suffix_count)
     if bufexists(bufnr)
       let winnr = bufwinnr(bufnr)
       exe winnr.'wincmd w'
-      quit
+      exe 'quit'.a:bang
     endif
   endfor
 endfunction
