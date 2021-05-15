@@ -8,6 +8,24 @@ For a visual demo, there's a screencast [on youtube](https://youtu.be/FnARbgfuEZ
 
 Requires Vim at version 7.4 or above.
 
+## Download and Install
+
+- Using Vim's built-in package manager:
+```
+mkdir -p ~/.vim/pack/andrewradev/start
+cd ~/.vim/pack/andrewradev/start
+git clone https://github.com/andrewradev/undoquit.git
+vim -u NONE -c "helptags undoquit/doc" -c q
+```
+
+- Vundle
+  - Add `Plugin 'andrewradev/undoquit'` to your `vimrc`
+  - Run the command `:PluginInstall` in vim
+
+- Vim-Plug
+  - Add `Plug 'andrewradev/undoquit'` to your `vimrc`
+  - Run the command `:PlugInstall` in vim
+
 ## Usage
 
 Whenever you execute a `:quit` on a window, that window's position is stored in a stack. Pressing `<c-w>u` (or executing the `:Undoquit` command) is going to "undo" that quit, restoring the window to its original position.
