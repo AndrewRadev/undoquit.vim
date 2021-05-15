@@ -14,16 +14,16 @@ Requires Vim at version 7.4 or above.
 ```
 mkdir -p ~/.vim/pack/andrewradev/start
 cd ~/.vim/pack/andrewradev/start
-git clone https://github.com/andrewradev/undoquit.git
+git clone https://github.com/andrewradev/undoquit.vim.git
 vim -u NONE -c "helptags undoquit/doc" -c q
 ```
 
 - Vundle
-  - Add `Plugin 'andrewradev/undoquit'` to your `vimrc`
+  - Add `Plugin 'andrewradev/undoquit.vim'` to your `vimrc`
   - Run the command `:PluginInstall` in vim
 
 - Vim-Plug
-  - Add `Plug 'andrewradev/undoquit'` to your `vimrc`
+  - Add `Plug 'andrewradev/undoquit.vim'` to your `vimrc`
   - Run the command `:PlugInstall` in vim
 
 ## Usage
