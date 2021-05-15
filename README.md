@@ -15,7 +15,7 @@ Requires Vim at version 7.4 or above.
 mkdir -p ~/.vim/pack/andrewradev/start
 cd ~/.vim/pack/andrewradev/start
 git clone https://github.com/andrewradev/undoquit.vim.git
-vim -u NONE -c "helptags undoquit/doc" -c q
+vim -u NONE -c "helptags undoquit.vim/doc" -c q
 ```
 
 - Vundle
