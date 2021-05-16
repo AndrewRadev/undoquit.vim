@@ -22,7 +22,12 @@ You can install the plugin yourself using Vim's |packages| functionality by
 cloning the project (or adding it as a submodule) under
 `~/.vim/pack/<any-name>/start/`. For example:
 >
-    git clone https://github.com/AndrewRadev/undoquit.vim ~/.vim/pack/_/start/undoquit
+    mkdir -p ~/.vim/pack/andrewradev/start
+    cd ~/.vim/pack/andrewradev/start
+    git clone https://github.com/andrewradev/undoquit.vim.git
+
+    # to generate documentation tags:
+    vim -u NONE -c "helptags undoquit.vim/doc" -c q
 <
 This should automatically load the plugin for you on Vim start. Alternatively,
 you can add it to `~/.vim/pack/<any-name>/opt/` instead and load it in your
