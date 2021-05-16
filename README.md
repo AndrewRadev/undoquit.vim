@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/AndrewRadev/undoquit.vim.svg?branch=master)](http://travis-ci.org/AndrewRadev/undoquit.vim)
+[![Build Status](https://secure.travis-ci.org/AndrewRadev/undoquit.vim.svg?branch=main)](http://travis-ci.org/AndrewRadev/undoquit.vim)
 
 This plugin attempts to solve the issue of quitting a window, and then realizing you actually need it moments later. It simply lets you "undo" the quit, similar to the "Restore Tab" functionality of a browser.
 
@@ -85,4 +85,4 @@ Set any of these variables to an empty string to avoid defining a mapping at all
 
 ## Contributing
 
-Pull requests are welcome, but take a look at [CONTRIBUTING.md](https://github.com/AndrewRadev/undoquit.vim/blob/master/CONTRIBUTING.md) first for some guidelines.
+Pull requests are welcome, but take a look at [CONTRIBUTING.md](https://github.com/AndrewRadev/undoquit.vim/blob/main/CONTRIBUTING.md) first for some guidelines.
