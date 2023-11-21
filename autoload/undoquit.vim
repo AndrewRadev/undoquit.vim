@@ -112,8 +112,8 @@ function! undoquit#GetWindowRestoreData()
   " attempt to store neighbouring buffers as split-base-points
   if s:UseNeighbourWindow('j', 'leftabove split',   window_data) | return window_data | endif
   if s:UseNeighbourWindow('k', 'rightbelow split',  window_data) | return window_data | endif
-  if s:UseNeighbourWindow('l', 'rightbelow vsplit', window_data) | return window_data | endif
-  if s:UseNeighbourWindow('h', 'leftabove vsplit',  window_data) | return window_data | endif
+  if s:UseNeighbourWindow('l', 'leftabove vsplit',  window_data) | return window_data | endif
+  if s:UseNeighbourWindow('h', 'rightbelow vsplit', window_data) | return window_data | endif
 
   " default case, no listed buffers around
   let window_data.neighbour_buffer = ''
