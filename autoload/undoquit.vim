@@ -53,10 +53,12 @@ function! undoquit#RestoreWindow()
   endif
 
   if window_data.neighbour_buffer != '' &&
-        \ bufnr(window_data.neighbour_buffer) >= 0 &&
-        \ bufwinnr(bufnr(window_data.neighbour_buffer)) >= 0
-    let neighbour_window = bufwinnr(bufnr(window_data.neighbour_buffer))
-    exe neighbour_window.'wincmd w'
+        \ bufnr(window_data.neighbour_buffer) >= 0
+    " try to find the latest-opened window with that buffer:
+    let max_winid = max(win_findbuf(bufnr(window_data.neighbour_buffer)))
+    if max_winid > 0
+      call win_gotoid(max_winid)
+    endif
   endif
 
   exe window_data.open_command.' '.escape(fnamemodify(window_data.filename, ':~:.'), ' ')
@@ -133,8 +135,9 @@ function! s:UseNeighbourWindow(direction, split_command, window_data)
   try
     exe 'wincmd '.a:direction
     let bufnr = bufnr('%')
-    if s:IsStorable(bufnr) && bufnr != current_bufnr
-      " then we have a neighbouring buffer above
+
+    if s:IsStorable(bufnr) && current_winnr != winnr()
+      " then we have a neighbouring window that has a storable buffer
       let a:window_data.neighbour_buffer = expand('%')
       let a:window_data.open_command = join([
             \ 'tabnext '.a:window_data.tabpagenr,

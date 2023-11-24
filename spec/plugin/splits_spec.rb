@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Splits" do
   before :each do
     write_file 'one.txt', 'one'
