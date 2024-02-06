@@ -66,6 +66,14 @@ function! undoquit#RestoreWindow()
   if has_key(window_data, 'view')
     call winrestview(window_data.view)
   endif
+
+  if has_key(window_data, 'height')
+    exe 'resize ' .. window_data.height
+  endif
+
+  if has_key(window_data, 'width')
+    exe 'vertical resize ' .. window_data.width
+  endif
 endfunction
 
 function! undoquit#RestoreTab()
@@ -96,7 +104,7 @@ endfunction
 " Fetches the data we need to successfully restore a window we're just about
 " to :quit.
 function! undoquit#GetWindowRestoreData()
-  let window_data = {
+  let data = {
         \ 'filename':  expand('%:p'),
         \ 'tabpagenr': tabpagenr(),
         \ 'view':      winsaveview(),
@@ -106,47 +114,135 @@ function! undoquit#GetWindowRestoreData()
 
   if len(real_buffers) == 1
     " then this is the last buffer in this tab
-    let window_data.neighbour_buffer = ''
-    let window_data.open_command     = (tabpagenr() - 1).'tabnew'
-    return window_data
+    let data.neighbour_buffer = ''
+    let data.open_command     = (tabpagenr() - 1).'tabnew'
+    return data
   endif
 
-  " attempt to store neighbouring buffers as split-base-points
-  if s:UseNeighbourWindow('j', 'leftabove split',   window_data) | return window_data | endif
-  if s:UseNeighbourWindow('k', 'rightbelow split',  window_data) | return window_data | endif
-  if s:UseNeighbourWindow('l', 'leftabove vsplit',  window_data) | return window_data | endif
-  if s:UseNeighbourWindow('h', 'rightbelow vsplit', window_data) | return window_data | endif
+  let neighbour_window = {}
+  let is_max_width = winwidth(0) == &columns
+  let is_max_height = winheight(0) + &cmdheight + (&laststatus >= 1 ? 1 : 0) == &lines
 
-  " default case, no listed buffers around
-  let window_data.neighbour_buffer = ''
-  let window_data.open_command     = 'edit'
-  return window_data
+  let neighbours = []
+
+  for direction in 'hjkl'
+    let neighbour_window = s:GetNeighbourWindow(direction)
+    if empty(neighbour_window)
+      continue
+    else
+      call add(neighbours, neighbour_window)
+    endif
+  endfor
+
+  let split_command = ''
+
+  " 1. Try to find a perfect neighbour with the same width/height
+  for neighbour_window in neighbours
+    let direction   = neighbour_window.direction
+    let same_height = neighbour_window.height == winheight(0)
+    let same_width  = neighbour_window.width == winwidth(0)
+
+    if same_height && direction == 'h'
+      let data.neighbour_buffer = ''
+      let split_command = 'rightbelow vsplit'
+    elseif same_width && direction == 'j'
+      let split_command = 'leftabove split'
+    elseif same_width && direction == 'k'
+      let split_command = 'rightbelow split'
+    elseif same_height && direction == 'l'
+      let split_command = 'leftabove vsplit'
+    endif
+
+    if split_command != ''
+      let data.neighbour_buffer = neighbour_window.buffer
+      let data.width = neighbour_window.width
+      let data.height = neighbour_window.height
+      break
+    endif
+  endfor
+
+  " 2. Try to find a neighbour to create a max-height or max-width window from
+  if split_command == '' && (is_max_width || is_max_height)
+    for neighbour_window in neighbours
+      let direction = neighbour_window.direction
+
+      if is_max_height && direction == 'h'
+        let split_command = 'rightbelow botright vsplit'
+      elseif is_max_width && direction == 'j'
+        let split_command = 'leftabove topleft split'
+      elseif is_max_width && direction == 'k'
+        let split_command = 'rightbelow botright split'
+      elseif is_max_height && direction == 'l'
+        let split_command = 'leftabove topleft vsplit'
+      endif
+
+      if split_command != ''
+        let data.neighbour_buffer = neighbour_window.buffer
+        break
+      endif
+    endfor
+  endif
+
+  " 3. Just pick any existing one as a fallback
+  if split_command == '' && !empty(neighbours)
+    let neighbour_window = neighbours[0]
+    let direction = neighbour_window.direction
+
+    if direction == 'h'
+      let split_command = 'rightbelow vsplit'
+    elseif direction == 'j'
+      let split_command = 'leftabove split'
+    elseif direction == 'k'
+      let split_command = 'rightbelow split'
+    elseif direction == 'l'
+      let split_command = 'leftabove vsplit'
+    endif
+
+    let data.neighbour_buffer = neighbour_window.buffer
+  endif
+
+  if split_command != ''
+    let data.width = winwidth(0)
+    let data.height = winheight(0)
+    let data.open_command = join([
+          \ 'tabnext ' .. data.tabpagenr,
+          \ split_command,
+          \ ], ' | ')
+  else
+    " default case, no listed buffers around
+    let data.neighbour_buffer = ''
+    let data.open_command     = 'edit'
+  endif
+
+  return data
 endfunction
 
-" Attempts to use a neighbouring window in the direction a:direction as a base
-" point from which to restore a previously-:quit window.
-"
-" Returns true if it found an appropriate window in that direction, false if
-" it didn't.
-function! s:UseNeighbourWindow(direction, split_command, window_data)
+function! s:GetNeighbourWindow(direction)
   let current_bufnr = bufnr('%')
   let current_winnr = winnr()
+  let data = {}
 
   try
     exe 'wincmd '.a:direction
-    let bufnr = bufnr('%')
+    let neighbour_bufnr = bufnr('%')
+    let neighbour_winnr = winnr()
 
-    if s:IsStorable(bufnr) && current_winnr != winnr()
-      " then we have a neighbouring window that has a storable buffer
-      let a:window_data.neighbour_buffer = expand('%')
-      let a:window_data.open_command = join([
-            \ 'tabnext '.a:window_data.tabpagenr,
-            \ a:split_command,
-            \ ], ' | ')
-      return 1
-    else
-      return 0
+    if current_winnr == neighbour_winnr
+      " then we haven't moved, nothing in this direction
+      return {}
     endif
+
+    if !s:IsStorable(neighbour_bufnr)
+      " then it's a temporary window that we can't restore
+      return {}
+    endif
+
+    return {
+          \ 'direction': a:direction,
+          \ 'buffer':    expand('%'),
+          \ 'height':    winheight(0),
+          \ 'width':     winwidth(0),
+          \ }
   finally
     exe current_winnr.'wincmd w'
   endtry
