@@ -85,4 +85,4 @@ Set any of these variables to an empty string to avoid defining a mapping at all
 
 ## Contributing
 
-Pull requests are welcome, but take a look at [CONTRIBUTING.md](https://github.com/AndrewRadev/undoquit.vim/blob/main/CONTRIBUTING.md) first for some guidelines.
+Pull requests are welcome, as long as they **did not involve any LLM usage**. Take a look at [CONTRIBUTING.md](https://github.com/AndrewRadev/undoquit.vim/blob/main/CONTRIBUTING.md) first for some guidelines.
